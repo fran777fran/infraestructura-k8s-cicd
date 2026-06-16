@@ -1,0 +1,32 @@
+# === Info delicada (NUNCA subir a Git) ===
+*.key
+*.pem
+*.crt
+.env
+*.env
+secrets/
+*-secret.yaml
+*-secret.yml
+
+# === Kubernetes / acceso al clúster ===
+kubeconfig
+*.kubeconfig
+.kube/
+
+# === Vagrant (Fase 1) ===
+.vagrant/
+
+# === Terraform ===
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# === Sistema operativo (Windows/Mac) ===
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# === Editor y temporales ===
+*.swp
+*~
+*.log
