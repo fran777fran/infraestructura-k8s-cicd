@@ -14,15 +14,23 @@ Estados: ✅ Aceptada · 🟡 Propuesta (a confirmar) · ❌ Descartada
 **Decisión:** Un único repositorio con una carpeta por área (infra, kubernetes, app, ci-cd, monitoring).
 **Motivo:** Refleja la hoja de ruta, facilita la navegación y prepara el terreno para GitOps.
 
-## ADR-003 — Distribución de Kubernetes: k3s 🟡
-**Decisión propuesta:** k3s.
-**Motivo:** Kubernetes certificado pero ligero; bajo consumo de RAM y arranque rápido, ideal para VMs limitadas.
-**Alternativa:** kubeadm (Kubernetes "puro": más dominio técnico, pero más laborioso y frágil).
-**Pendiente:** confirmar según los recursos de hardware disponibles.
+## ADR-003 — Distribución de Kubernetes: k3s ✅
+**Fecha:** 2026-06-16
+**Decisión:** Usar k3s como distribución de Kubernetes.
+**Motivo:** Kubernetes certificado pero ligero y fiable; arranque rápido y bajo consumo, lo que
+reduce el riesgo de fallos el día de la defensa y permite centrar el esfuerzo en lo que más valor
+aporta (CI/CD y monitorización).
+**Alternativa descartada:** kubeadm (Kubernetes "puro": más dominio técnico pero más laborioso y
+frágil). Se contempla como entorno adicional si sobra tiempo.
 
-## ADR-004 — Base de virtualización 🟡
-**Opciones en evaluación:** VirtualBox local · Proxmox en equipo dedicado · Nube (Oracle Free Tier / Hetzner).
-**Pendiente:** confirmar según la RAM/CPU del equipo disponible.
+## ADR-004 — Base de virtualización: VirtualBox en local ✅
+**Fecha:** 2026-06-16
+**Decisión:** Desplegar las 3 VMs con VirtualBox en el equipo local (32 GB de RAM).
+**Motivo:** Encaja con las competencias de ASIR (se administra la virtualización y la red); total
+fiabilidad y disponibilidad sin internet el día de la defensa; sin coste ni riesgo de suspensión de
+cuenta. El acceso HTTPS externo se resolverá con un túnel (Cloudflare Tunnel) o DuckDNS + apertura
+de puerto en el router.
+**Alternativa descartada:** nube gratuita (Oracle Free Tier). Se menciona como línea de mejora futura.
 
 ## ADR-005 — Aplicación a desplegar 🟡
 **Opciones en evaluación:** app propia de 3 capas · app open source real · demo de microservicios (Online Boutique).
