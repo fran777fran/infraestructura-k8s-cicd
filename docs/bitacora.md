@@ -11,3 +11,16 @@ Diario del proyecto. Cada entrada: fecha · qué se hizo · problemas y solucion
   **Solución:** lo eliminé con `git remote remove origin` y lo volví a añadir con mi URL real
   (`https://github.com/fran777fran/...`). Verificado con `git remote -v`.
 - Redactada la documentación inicial: README, decisiones técnicas (ADR) y esta bitácora.
+
+
+## 2026-06-20 — Fase 1: máquinas virtuales
+- Instalado VirtualBox y descargada la ISO de Ubuntu Server 24.04 LTS.
+- Configurada la red Host-Only `192.168.56.0/24` (anfitrión en `.1`, DHCP desactivado).
+- Creada la VM `k3s-server` (2 vCPU, 4 GB, 25 GB) con dos adaptadores: NAT + Host-Only.
+- Instalado Ubuntu Server a mano con OpenSSH activado e IP fija `192.168.56.10`.
+- **Problema:** al reiniciar tras instalar apareció "failed unmounting cdrom.mount".
+  **Solución:** era inofensivo; apagué la VM y quité la ISO de la unidad óptica.
+- Clonadas `k3s-agent-1` (`.11`) y `k3s-agent-2` (`.12`); ajustados hostname e IP en cada una.
+- Configurado acceso por clave SSH sin contraseña desde Windows y atajos en `~/.ssh/config`.
+- Añadidas las entradas de los tres nodos en `/etc/hosts`.
+- **Resultado:** 3 nodos accesibles por SSH y comunicados entre sí. Fase 1 completada.
