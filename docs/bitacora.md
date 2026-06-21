@@ -24,3 +24,14 @@ Diario del proyecto. Cada entrada: fecha · qué se hizo · problemas y solucion
 - Configurado acceso por clave SSH sin contraseña desde Windows y atajos en `~/.ssh/config`.
 - Añadidas las entradas de los tres nodos en `/etc/hosts`.
 - **Resultado:** 3 nodos accesibles por SSH y comunicados entre sí. Fase 1 completada.
+
+
+## 2026-06-21 — Fase 2: clúster Kubernetes (k3s)
+- Instalado k3s (v1.35.5+k3s1) en `k3s-server` como control-plane, forzando la red Host-Only y
+  desactivando Traefik y servicelb (se usarán MetalLB + Ingress-NGINX en la Fase 3).
+- Unidos `k3s-agent-1` y `k3s-agent-2` como workers con el token del servidor.
+- **Problema:** al unir el primer worker, el servicio `k3s-agent` falló porque al pegar el token se
+  coló un salto de línea (token inválido).
+  **Solución:** capturar el token con `read -r TOKEN` (ignora el salto de línea) y relanzar con `K3S_TOKEN="$TOKEN"`.
+- Instalado `kubectl` en Windows, copiado el kubeconfig por `scp` y ajustado el campo `server:`.
+- **Resultado:** 3 nodos `Ready` y clúster manejable desde Windows. Fase 2 completada.
