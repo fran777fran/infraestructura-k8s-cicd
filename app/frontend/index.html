@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario de productos</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    h1 { text-align: center; }
+    form { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    input { padding: 8px; flex: 1; min-width: 80px; }
+    button { padding: 8px 16px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    .borrar { background: #e74c3c; color: white; border: none; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Inventario de productos</h1>
+
+  <form id="form-producto">
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="number" id="cantidad" placeholder="Cantidad" min="0" value="0">
+    <input type="number" id="precio" placeholder="Precio" min="0" step="0.01" value="0">
+    <button type="submit">Añadir</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Cantidad</th><th>Precio</th><th></th></tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+
+  <script>
+    const API = "/api/productos";
+
+    // Crea una celda usando textContent (evita inyección de HTML/JS = XSS)
+    function crearCelda(texto) {
+      const td = document.createElement("td");
+      td.textContent = texto;
+      return td;
+    }
+
+    async function cargar() {
+      const res = await fetch(API);
+      const productos = await res.json();
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+      for (const p of productos) {
+        const fila = document.createElement("tr");
+        fila.appendChild(crearCelda(p.id));
+        fila.appendChild(crearCelda(p.nombre));
+        fila.appendChild(crearCelda(p.cantidad));
+        fila.appendChild(crearCelda(p.precio.toFixed(2) + " €"));
+        const tdBoton = document.createElement("td");
+        const boton = document.createElement("button");
+        boton.textContent = "Borrar";
+        boton.className = "borrar";
+        boton.addEventListener("click", () => borrar(p.id));
+        tdBoton.appendChild(boton);
+        fila.appendChild(tdBoton);
+        lista.appendChild(fila);
+      }
+    }
+
+    async function borrar(id) {
+      await fetch(`${API}/${id}`, { method: "DELETE" });
+      cargar();
+    }
+
+    document.getElementById("form-producto").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: document.getElementById("nombre").value,
+          cantidad: document.getElementById("cantidad").value,
+          precio: document.getElementById("precio").value,
+        }),
+      });
+      e.target.reset();
+      cargar();
+    });
+
+    cargar();  // Cargar la lista al abrir la página
+  </script>
+</body>
+</html>
